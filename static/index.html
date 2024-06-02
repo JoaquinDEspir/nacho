@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mover Archivos</title>
+</head>
+<body>
+    <h1>Mover Archivos a Carpetas</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="file" name="file" accept="*/*" /><br><br>
+        <button type="button" onclick="moveFile(1)">Mover a Carpeta 1</button>
+        <button type="button" onclick="moveFile(2)">Mover a Carpeta 2</button>
+        <button type="button" onclick="moveFile(3)">Mover a Carpeta 3</button>
+        <button type="button" onclick="moveFile(4)">Mover a Carpeta 4</button>
+        <button type="button" onclick="moveFile(5)">Mover a Carpeta 5</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        async function moveFile(folderNumber) {
+            const fileInput = document.getElementById('file');
+            if (fileInput.files.length === 0) {
+                alert('Por favor, selecciona un archivo primero.');
+                return;
+            }
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('folder', folderNumber);
+
+            try {
+                const response = await fetch('/move', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                document.getElementById('result').innerText = result.message;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
